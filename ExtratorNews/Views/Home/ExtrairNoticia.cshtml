@@ -1,0 +1,88 @@
+﻿@using ExtratorNews.Controllers
+@model ExtratorNews.Controllers.UrlSeletorConteudo
+
+@{
+    ViewBag.Title = "ExtrairNoticia";
+}
+
+<h2>ExtrairNoticia</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>UrlSeletorConteudo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+                <span>http://noticias.uol.com.br/saude/ultimas-noticias/redacao/2015/05/18/foto-de-celular-ajuda-a-diagnosticar-menino-com-cancer.htm</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SeletorAutor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SeletorAutor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SeletorAutor, "", new { @class = "text-danger" })
+                <span>p.pg-color10</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SeletorTitulo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SeletorTitulo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SeletorTitulo, "", new { @class = "text-danger" })
+                <span>h1.pg-color10</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SeletorConteudo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SeletorConteudo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SeletorConteudo, "", new { @class = "text-danger" })
+                <span>#texto</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SeletorFoto, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SeletorFoto, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SeletorFoto, "", new { @class = "text-danger" })
+                <span>img.imagem</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @if (ViewBag.Noticia != null)
+    {
+        var noticia = (NoticiasConteudoCrawler)ViewBag.Noticia;
+
+        <h1>@noticia.Titulo</h1>
+        <em>@noticia.Autor</em>
+
+        if (!string.IsNullOrEmpty(noticia.UrlFoto))
+        {
+            <img src="@noticia.UrlFoto" alt="@noticia.Titulo" />
+        }
+
+        <p>@noticia.Conteudo</p>
+
+        
+    }
+</div>
