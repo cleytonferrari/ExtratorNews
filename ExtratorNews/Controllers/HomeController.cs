@@ -28,8 +28,6 @@ namespace ExtratorNews.Controllers
         [HttpPost]
         public ActionResult Index(UrlSeletor dados)
         {
-            //var textoDecode = System.Net.WebUtility.HtmlDecode(documento);
-
             if (string.IsNullOrEmpty(dados.SeletorLista))
                 dados.SeletorLista = "body";
 
@@ -58,6 +56,34 @@ namespace ExtratorNews.Controllers
             ViewBag.ListaNoticias = listaNoticiaCrawler;
             return View(dados);
         }
+
+        public ActionResult ExtrairNoticia(string url)
+        {
+            return View(new UrlSeletorConteudo(){Url = url});
+        }
+
+        [HttpPost]
+        public ActionResult ExtrairNoticia(UrlSeletorConteudo dados)
+        {
+            
+            if (string.IsNullOrEmpty(dados.Url))
+                return RedirectToAction("Index");
+
+            var html = GetHtml(dados.Url);
+            var query = CQ.Create(html);
+
+            var noticia = new NoticiasConteudoCrawler();
+
+            noticia.Autor = query.Select(dados.SeletorAutor).Text();
+            noticia.Titulo = query.Select(dados.SeletorTitulo).Text();
+            noticia.Conteudo = query.Select(dados.SeletorConteudo).Text();
+            noticia.UrlFoto = query.Select(dados.SeletorFoto).Attr("src");
+
+
+            ViewBag.Noticia = noticia;
+            return View(dados);
+        }
+
 
 
         private static string GetHtml(string url)
@@ -98,6 +124,31 @@ namespace ExtratorNews.Controllers
         public string Url { get; set; }
     }
 
+    public class UrlSeletorConteudo
+    {
+        [Display(Name = "Url da notícia:")]
+        public string Url { get; set; }
+        
+        [Display(Name = "Seletor do autor:")]
+        public string SeletorAutor { get; set; }
+
+        [Display(Name = "Seletor do Título:")]
+        public string SeletorTitulo { get; set; }
+
+        [Display(Name = "Seletor do conteúdo:")]
+        public string SeletorConteudo { get; set; }
+
+        [Display(Name = "Seletor da foto:")]
+        public string SeletorFoto { get; set; }
+    }
+
+    public class NoticiasConteudoCrawler
+    {
+        public string Titulo { get; set; }
+        public string Autor { get; set; }
+        public string Conteudo { get; set; }
+        public string UrlFoto { get; set; }
+    }
 
 
 }

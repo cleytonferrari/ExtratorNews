@@ -61,7 +61,7 @@
         <ul>
             @foreach (var item in (List<NoticiasCrawler>)ViewBag.ListaNoticias)
             {
-                <li><a href="@item.Url">@item.Titulo</a></li>
+                <li><a href="@Url.Action("ExtrairNoticia", "Home", new { url = item.Url })">@item.Titulo</a></li>
             }
         </ul>
     }
